@@ -1,18 +1,27 @@
 import React from "react";
 import axios from "axios";
+import apiClient from "../services/api";
 
-const Books = () => {
+const Books = (props) => {
   const [books, setBooks] = React.useState([]);
   React.useEffect(() => {
-    axios
-      .get("/book/app")
+    apiClient
+      .get("/book/")
       .then((response) => {
         setBooks(response.data);
       })
       .catch((error) => console.error(error));
   }, []);
-  const bookList = books.map((book) => <li key={book.id}>{book.title}</li>);
-  return <ul>{bookList}</ul>;
+  const bookList = books.map((book) => (
+    <div key={book.id} className="list-group-item">
+      <h5>{book.title}</h5>
+      <small>{book.author}</small>
+    </div>
+  ));
+  if (props.loggedIn) {
+    return <div>{bookList}</div>;
+  }
+  return <div>You are not logged in.</div>;
 };
 
 export default Books;
